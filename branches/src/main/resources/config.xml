@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Config>
+    <encoding>UTF-8</encoding>
+
+    <!-- 不用登录就可以访问的url列表和接口 -->
+    <excludeUrls>
+        <excludeUrl>/registeredUser</excludeUrl><!-- 云视频新增注册用户调用接口 -->
+        <excludeUrl>/addDomain</excludeUrl><!-- openapi新增域名相关接口 -->
+        <excludeUrl>/status</excludeUrl><!-- openapi删除域名配置信息接口 -->
+    </excludeUrls>
+</Config>

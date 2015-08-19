@@ -1,0 +1,181 @@
+@charset "utf-8";
+/* CSS Document */
+@charset "utf-8";
+html {
+    SCROLLBAR-FACE-COLOR: #eaf3ff;
+    SCROLLBAR-HIGHLIGHT-COLOR: #acdfd6;
+    SCROLLBAR-SHADOW-COLOR: #acdfd6;
+    SCROLLBAR-3DLIGHT-COLOR: #F0F0F0;
+    SCROLLBAR-ARROW-COLOR: #240024;
+    SCROLLBAR-TRACK-COLOR: #F0F0F0;
+    SCROLLBAR-DARKSHADOW-COLOR: #d0f2f3;
+    SCROLLBAR-BASE-COLOR: #fcfcfc
+}
+
+/*所有Tab页中显示的页面默认的body样式*/
+body {
+    text-align: left;
+    margin: 8px;
+    /*width: 980px;*/
+    color: #546c89;
+    background: #FFF;
+}
+
+/*显示在首页中的子页面的body式样*/
+.main_page_body {
+	width:750px;
+	padding:3px;
+}
+
+/*搜索条件显示的外层的panel式样*/
+.ms-panel-outer {
+	width: 980px;
+	padding:5px;
+	margin: 0 0 10px 0;
+}
+
+.normaltext {
+    width: 150px;
+    height: 20px;
+    line-height: 20px;
+    padding: 0px 5px;
+    border: 1px solid #bdbcc2;
+}
+
+.readonlytext {
+    width: 250px;
+    height: 20px;
+    line-height: 20px;
+    padding: 0px 5px;
+    border: 1px solid #bdbcc2;
+}
+
+.app_words_text {
+    width: 200px;
+    height: 20px;
+    line-height: 20px;
+    padding: 0px 5px;
+    border: 1px solid #bdbcc2;
+}
+
+.bigtext {
+    width: 200px;
+    height: 20px;
+    line-height: 20px;
+    padding: 0px 5px;
+    border: 1px solid #bdbcc2;
+}
+
+.longtext {
+    width: 600px;
+    height: 20px;
+    line-height: 20px;
+    padding: 0px 5px;
+    border: 1px solid #bdbcc2;
+}
+
+.readonly {
+    background-color: #eaf3ff;
+    border-width: 0px;
+}
+
+.readonly2 {
+    background-color: transparent;
+    border-width: 0px;
+    color: #516480;
+}
+
+.textarea {
+    width: 600px;
+    height: 100px;
+    line-height: 20px;
+    padding: 5px;
+    border: 1px solid #bdbcc2;
+    font-size: 12px;
+    resize: none;
+}
+
+.item_name {
+    padding: 0 0 0 5px;
+    height:31px;
+    width: 19%;
+    background-color: #d0f2f3;
+}
+
+.item_value {
+    width: 31%;
+    background-color: #eaf3ff;
+}
+
+.span3 {
+    width: 81%;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.displayNone {
+    display: none;
+}
+
+.toolTip { /* This is the hook that the jQuery script will use */
+    padding-right: 20px; /* This is need to make sure that the help icon is always visible */
+    background: transparent url(../resources/images/help.gif) no-repeat right;
+    width: 30px;
+    color: #3366FF;
+    cursor: help;
+    position: relative; /* This contains the .toolTipWrapper div that is absolutely positioned  */
+}
+
+.toolTipWrapper { /* The wrapper holds its insides together */
+    width: 200px;
+    position: absolute; /* Absolute will make the tooltip float above other content in the page */
+    top: 0;
+    display: none; /* It has to be displayed none so that the jQuery fadein and fadeout functions will work */
+    color: #FBFB8C;
+    font-weight: bold;
+    font-size: 9pt; /* A font size is needed to maintain consistancy */
+}
+
+.toolTipTop { /* Top section of the tooltip */
+    width: 175px;
+    height: 30px;
+    background: #FBFB8C transparent no-repeat;
+}
+
+.toolTipMid { /* Middle section of the tooltip */
+    padding: 8px 15px;
+    color:black;
+    background: #FBFB8C repeat-x top;
+}
+
+.toolTipBtm { /* Bottom Section of the tooltip */
+    height: 13px;
+    background: #FBFB8C transparent no-repeat;
+}
+#tipMsg{ margin-left:20px; color:#f30}
+/*note*/
+.note-gray,.note-selected{ padding:0 6px; margin:0 0 0 15px; font:normal 14px/22px 'Microsoft YaHei'; border:1px solid #bebebe; background:#fff; color:#999; float:left; cursor:pointer }
+.note-gray:hover,.note-selected{ border:1px solid #509af8; color:#509af8; background:#ecf4fe}
+/*float*/
+.floatl{ float:left}
+.slide-box{padding:10px 0;border:1px solid #95b8e7; border-top:none}
+/*box*/
+.icon-help{ background:url(../resources/images/ico-help.png) 0 5px no-repeat; padding-left:22px;display:inline-block;cursor:pointer }
+.box-list .btn-small,.box-shitu .btn-small{ position:absolute; top:-35px; right:-10px; }
+.box-list{ min-height:520px;  width:97.2%; padding:20px 1%; background:#f8f8f8; left:0.4%; position:relative }
+.box-shitu{ min-height:520px; width:99.2%; padding:20px 0;background:#e0edfd; left:0.4%; position:relative }
+.box-shitu .txt{ text-align:center; font:normal 14px/32px 'Microsoft YaHei' }
+/*yumingxuanze*/
+.search-yuming{ height:28px; position:relative; z-index:1000 }
+.search-yuming .btn-quanxuan,.search-yuming .btn-fanxuan{ width:56px; height:24px; margin:0 10px; background:#f2f2f2; color:#666; font:normal 14px/22px 'Microsoft YaHei'; border:none; cursor:pointer }
+.search-yuming .btn-fanxuan{ background:#e0edfd; color:#509af8 }
+.search-yuming .txt{ font:normal 14px/24px 'Microsoft YaHei'; float:left }
+.search-yuming .box{ width:320px; height:24px; padding:0 0 0 10px; margin-right:15px; font:normal 14px/24px 'Microsoft YaHei'; color:#c2c2c2; background:#fff 98% -135px no-repeat; border:1px solid #bebebe; float:left; cursor:pointer }
+.search-yuming .info{ width:330px; max-height:360px; padding:15px 0 10px; border:1px solid #bebebe; border-top:none; background:#fff; position:absolute; top:18px; left:3px; overflow-x:hidden;overflow-y:scroll }
+.search-yuming .info dt{ padding-bottom:5px;margin:0 }
+.search-yuming .info dd{ width:310px; padding:2px 10px; height:24px; font:normal 14px/24px Arial,'Microsoft YaHei'; color:#666;margin:0 }
+.search-yuming .info .ck{ margin-right:4px }
+/*load*/
+#loadTxt{ width:120px; font:normal 14px/35px 'Microsoft YaHei'; color:#f0f4f8; text-align:center;display:none }

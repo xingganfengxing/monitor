@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.letv.cdn.report.dao.VodPlatStatMapper" >
+    <resultMap id="BaseResultMap" type="com.letv.cdn.report.pojo.VodPlatStat" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="ptime" property="ptime" jdbcType="VARCHAR" />
+        <result column="platid" property="platid" jdbcType="INTEGER" />
+        <result column="platname" property="platname" jdbcType="VARCHAR" />
+        <result column="splatid" property="splatid" jdbcType="INTEGER" />
+        <result column="splatname" property="splatname" jdbcType="VARCHAR" />
+        <result column="bw" property="bw" jdbcType="DOUBLE" />
+        <result column="request" property="request" jdbcType="INTEGER" />
+    </resultMap>
+
+    <resultMap id="LineNodeResultMap" type="com.letv.cdn.report.pojo.XyNode" >
+        <result column="ptime" property="xKey" jdbcType="VARCHAR" />
+        <result column="bw" property="yValue" jdbcType="DOUBLE" />
+    </resultMap>
+
+    <resultMap id="BarNodeResultMap" type="com.letv.cdn.report.pojo.XyNode" >
+        <result column="splatname" property="xKey" jdbcType="VARCHAR" />
+        <result column="bw" property="yValue" jdbcType="DOUBLE" />
+    </resultMap>
+
+    <resultMap id="PieNodeResultMap" type="com.letv.cdn.report.pojo.PieNode" >
+        <result column="platName" property="name" jdbcType="VARCHAR" />
+        <result column="bw" property="value" jdbcType="DOUBLE" />
+    </resultMap>
+
+    <select id="selectBwByQuery" resultMap="BaseResultMap" parameterType="com.letv.cdn.report.pojo.BwQuery" >
+        select id, ptime, platid, platname, splatid, splatname, bw, request from ${tableName}
+       where 1=1
+      <if test="platid != null">
+          and platid=#{platid}
+      </if>
+      <if test="splatid != null">
+          and splatid=#{splatid}
+      </if>
+      <if test="startTime != null and startTime != ''">
+          and str_to_date(ptime,'%Y%m%d%H%i') >= str_to_date(#{startTime},'%Y-%m-%d %H:%i:%s')
+      </if>
+      <if test="endTime != null and endTime != ''">
+          and str_to_date(ptime,'%Y%m%d%H%i') &lt;= str_to_date(#{endTime},'%Y-%m-%d %H:%i:%s')
+      </if>
+      order by str_to_date(ptime,'%Y%m%d%H%i')
+    </select>
+
+    <select id="getLineNodeBwByQuery" resultMap="LineNodeResultMap" parameterType="com.letv.cdn.report.pojo.BwQuery" >
+        select ptime,sum(bw) as bw from ${tableName}
+        where 1=1
+        <if test="platid != null">
+            and platid=#{platid}
+        </if>
+        <if test="splatid != null">
+            and splatid=#{splatid}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and str_to_date(ptime,'%Y%m%d%H%i') >= str_to_date(#{startTime},'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and str_to_date(ptime,'%Y%m%d%H%i') &lt;= str_to_date(#{endTime},'%Y-%m-%d %H:%i:%s')
+        </if>
+        group by ptime
+    </select>
+
+    <select id="getBwByQuery" resultMap="PieNodeResultMap" parameterType="com.letv.cdn.report.pojo.BwQuery" >
+        select platname,sum(bw) as bw from ${tableName}
+        where 1=1
+        <if test="platid != null">
+            and platid=#{platid}
+        </if>
+        <if test="splatid != null">
+            and splatid=#{splatid}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and ptime=#{startTime}
+        </if>
+        group by platname
+    </select>
+
+    <select id="getBwSubByQuery" resultMap="BarNodeResultMap" parameterType="com.letv.cdn.report.pojo.BwQuery" >
+        select splatname,sum(bw) as bw from ${tableName}
+        where 1=1
+        <if test="platid != null">
+            and platid=#{platid}
+        </if>
+        <if test="splatid != null">
+            and splatid=#{splatid}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and ptime=#{startTime}
+        </if>
+        group by splatname
+    </select>
+
+    <select id="getByStartTime" resultMap="BaseResultMap" parameterType="com.letv.cdn.report.pojo.BwQuery" >
+        select id, ptime, platid, platname, splatid, splatname, bw, request from ${tableName}
+        where 1=1
+        <if test="platid != null">
+            and platid=#{platid}
+        </if>
+        <if test="splatid != null">
+            and splatid=#{splatid}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and ptime=#{startTime}
+        </if>
+        order by bw desc
+    </select>
+    
+    <select id="getEndPtime" resultType="java.lang.String" parameterType="com.letv.cdn.report.pojo.BwQuery">
+        select ptime from ${tableName} order by ptime desc limit 1
+    </select>
+
+    <select id="getStartPtime" resultType="java.lang.String" parameterType="com.letv.cdn.report.pojo.BwQuery">
+        select ptime from ${tableName} order by ptime limit 1
+    </select>
+</mapper>

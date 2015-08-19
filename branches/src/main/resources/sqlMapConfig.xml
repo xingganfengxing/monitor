@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+    <!-- Settings各节点的说明： cacheModelsEnable :是否启用SqlMapClient上的缓存机制，建议设为true;
+        enhancementEnabled:是否针对POJO启用字节码增加机制以提升getter/setter的调用效能，避免使用Java reflect所带来的性能开销,
+        同时也为Lazy Loading带来了极大的性能提升，建议设置为true; lazyLoadingEnabled:是否启用延迟加载机制，建议设为"true";
+        errorTracingEnabled:是否启用错误日志，在开发期间建议设为"true" 以方便调试; maxRequests:最大并发请求数（Statement并发数）;
+        maxSessions:最大Session 数。即当前最大允许的并发SqlMapClient数。maxSessions设定必须介于maxTransactions和maxRequests之间，
+        即maxTransactions<maxSessions=<maxRequests; maxTransactions:最大并发事务数; useStatementNamespaces:是否使用Statement命名空间。这里的命名空间指的是映射文件中，sqlMap节点的namespace属性，如针对users表的映射文件sqlMap节点：
+        <sqlMap namespace="Users">这里，指定了此sqlMap节点下定义的操作均从属于"Users"命名空间。在useStatementNamespaces="true"的情况
+        下，Statement调用需追加命名空间，如：sqlMap.update("Users.updateUser",user);否则直接通过Statement名称调用即可，如：
+        sqlMap.update("updateUser",user);但请注意此时需要保证所有映射文件中，Statement定义无重名。 -->
+    <settings cacheModelsEnabled="true" enhancementEnabled="true"
+              lazyLoadingEnabled="true" errorTracingEnabled="false" maxRequests="32"
+              maxSessions="10" maxTransactions="5" useStatementNamespaces="true"/>
+
+    <!-- MS共通SQL -->
+    <sqlMap resource="com/letv/live/framework/dao/sql/CodeInfoSQL.xml"/>
+    <sqlMap resource="com/letv/live/framework/dao/sql/CodeTypeSQL.xml"/>
+    <sqlMap resource="com/letv/live/framework/dao/sql/SysConfigSQL.xml"/>
+    <sqlMap resource="com/letv/live/framework/dao/sql/MenuSQL.xml"/>
+    <sqlMap resource="com/letv/live/framework/dao/sql/UserSQL.xml"/>
+    <sqlMap resource="com/letv/live/framework/dao/sql/RoleSQL.xml"/>
+    <sqlMap resource="com/letv/live/framework/dao/sql/FunctionSQL.xml"/>
+    <sqlMap resource="com/letv/live/framework/dao/sql/UserRightSQL.xml"/>
+
+</sqlMapConfig>

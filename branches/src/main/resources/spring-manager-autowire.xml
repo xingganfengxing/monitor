@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	   http://www.springframework.org/schema/context
+	   http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	   http://www.springframework.org/schema/tx
+	   http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+	   http://www.springframework.org/schema/aop
+	   http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	   http://www.springframework.org/schema/mvc
+	   http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	   http://www.springframework.org/schema/task
+       http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+	<!-- 数据库配置 -->
+	<tx:annotation-driven transaction-manager="transactionManagerManager"
+		proxy-target-class="true" />
+	<bean id="dataSourceManager" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="${manager.mysql.url}"></property>
+		<property name="username" value="${manager.mysql.username}"></property>
+		<property name="password" value="${manager.mysql.password}"></property>
+		<property name="maxActive" value="50"></property>
+		<property name="maxIdle" value="50"></property>
+		<property name="maxWait" value="100"></property>
+		<property name="defaultAutoCommit" value="false"></property>
+		<!-- 活动连接的最大空闲时间 ，超过时间限制，回收没有用(废弃)的连接 -->
+		<property name="removeAbandonedTimeout" value="28000" />
+		<!-- 是否清理removeAbandonedTimeout秒没有使用的活动连接，清理后并没有放回连接池。 -->
+		<property name="removeAbandoned" value="true" />
+		<property name="timeBetweenEvictionRunsMillis" value="20000" />
+
+		<!-- 这个值要小于mysql中的 'wait_timeout' 28800秒 -->
+		<!-- dbcp默认是30分，需要开启异步线程Evict，否则不生效。 原理很简单，就是通过一个异步线程，每次检查connnection上一次使用的时间戳， 
+			看看是否已经超过这个timeout时间设置。 -->
+		<property name="minEvictableIdleTimeMillis" value="28000" />
+		<!-- 代表每次检查链接的数量，建议设置和maxActive一样大，这样每次可以有效检查所有的链接. -->
+		<property name="numTestsPerEvictionRun" value="100" />
+	</bean>
+	
+	<bean id="jdbcTemplateMonitor" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSourceManager" />
+	</bean>
+
+	<!--点播 cdn mysql datasource start -->
+	<bean id="cdnDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="${cdn.mysql.url}" />
+		<property name="username" value="${cdn.mysql.username}" />
+		<property name="password" value="${cdn.mysql.password}" />
+		<property name="validationQuery" value="select count(1)" />
+		<property name="testOnBorrow" value="true" />
+		<property name="removeAbandonedTimeout" value="300" />
+		<property name="removeAbandoned" value="false" />
+	</bean>
+
+	<bean id="jdbcTemplateVod" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="cdnDataSource" />
+	</bean>
+
+	<!--点播 cdn mysql datasource start -->
+	<bean id="logDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://10.150.147.39:3306/cdn_monitor" />
+		<property name="username" value="admin_monitor" />
+		<property name="password" value="Monitor_0320" />
+		<property name="validationQuery" value="select count(1)" />
+		<property name="testOnBorrow" value="true" />
+		<property name="removeAbandonedTimeout" value="300" />
+		<property name="removeAbandoned" value="false" />
+	</bean>
+
+	<bean id="jdbcTemplateLog" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="logDataSource" />
+	</bean>
+
+
+	<bean id="sqlSessionFactoryManager" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSourceManager" />
+		<property name="configLocation" value="classpath:MyBatis-Configuration-manager.xml" />
+		<!-- <property name="mapperLocations" value="classpath:mybatisXml/manager/*.xml" 
+			/> -->
+		<!-- Mybatis XML映射文件 -->
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:mybatisXml/manager/*.xml</value>
+			</list>
+		</property>
+	</bean>
+	<bean name="transactionManagerManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSourceManager"></property>
+	</bean>
+	<tx:advice id="userTxAdvice" transaction-manager="transactionManagerManager">
+		<tx:attributes>
+			<tx:method name="getArea" propagation="REQUIRED" read-only="false"
+				rollback-for="java.lang.Exception" /><!--初始化地区信息时事务 -->
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:pointcut id="pc"
+			expression="execution(public * com.letv.cdn.manager.service.*.*(..))" /> <!--把事务控制在Service层 -->
+		<aop:advisor pointcut-ref="pc" advice-ref="userTxAdvice" />
+	</aop:config>
+	<bean name="mapperScannerConfigurerManager" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage"
+			value="com.letv.cdn.common.dao;com.letv.cdn.manager.dao;com.letv.cdn.report.dao;com.letv.cdn.monitor.dao" />
+		<!-- <property name="sqlSessionFactory" ref="sqlSessionFactoryManager" 
+			/> -->
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryManager" />
+	</bean>
+</beans>
